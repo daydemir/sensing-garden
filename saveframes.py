@@ -43,4 +43,3 @@ while True:
     capture_and_process()
     time.sleep(10)
 
-# testing updated
