@@ -38,5 +38,3 @@ while True:
 
 # Release resources and close windows
 cv2.destroyAllWindows()
-
-# test push
