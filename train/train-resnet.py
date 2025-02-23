@@ -57,7 +57,7 @@ def get_transforms(args):
         transforms.RandomResizedCrop(args.img_size),  # Crop image randomly and resize
         transforms.RandomHorizontalFlip(),  # Random horizontal flip
         transforms.RandomRotation(15),  # Random rotation within 15 degrees
-        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),  # Color jitter
+        transforms.RandomApply([transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)], p=0.4),  # Randomly apply Color jitter
         transforms.RandomApply([transforms.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5))], p=0.5),  # Random Gaussian blur with 50% probability
         transforms.ToTensor(),  # Convert image to tensor
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Normalize (imagenet stats)
