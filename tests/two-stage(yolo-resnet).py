@@ -16,6 +16,7 @@ import argparse
 from collections import defaultdict
 from tabulate import tabulate
 from tqdm import tqdm
+import csv
 
 class TestTwoStage:
     def __init__(self, yolo_model_path, resnet_model_path, num_classes=22, use_resnet50=False, species_names=""):
@@ -43,10 +44,12 @@ class TestTwoStage:
         
         predicted_frames = []
         true_frames = []
+        image_names = []
 
         start_time = time.time()  # Start timing
 
         for image_name in tqdm(os.listdir(image_dir), desc="Processing Images", unit="image"):
+            image_names.append(image_name)
             image_path = os.path.join(image_dir, image_name)
             label_path = os.path.join(label_dir, image_name.replace('.jpg', '.txt'))
 
@@ -95,6 +98,12 @@ class TestTwoStage:
             true_frames.append(true_frame if true_frame else [])
 
         end_time = time.time()  # End timing
+
+        with open("output.csv", "w") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Image Name", "True", "Predicted"])
+            for image_name, true_frame, predicted_frame in zip(image_names, true_frames, predicted_frames):
+                writer.writerow([image_name, true_frame, predicted_frame])
         
         return predicted_frames, true_frames, end_time - start_time
     
@@ -215,12 +224,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     species_names = [
-        "Aglais io", "Aglais urticae", "Bombus hortorum", "Bombus lapidarius",
-        "Bombus lucorum", "Bombus monticola", "Bombus pascuorum", "Colias croceus",
-        "Colletes hederae", "Episyrphus balteatus", "Eristalis tenax", "Gonepteryx rhamni",
-        "Myathropa florea", "Pieris brassicae", "Pieris rapae", "Polygonia c-album",
-        "Rhingia campestris", "Syrphus ribesii", "Vanessa atalanta", "Vanessa cardui",
-        "Vespa crabro", "Vespula vulgaris"
+        "Coccinellidae septempunctata", "Apis mellifera", "Bombus lapidarius", "Bombus terrestris",
+        "Eupeodes corolla", "Episyrphus balteatus", "Aglais urticae", "Vespula vulgaris",
+        "Eristalis tenax", "Non-Bombus Anthophila", "Bombus spp.", "Syrphidae",
+        "Fly spp.", "Unclear insect", "Mixed animals"
     ]
 
     classifier = TestTwoStage(args.yolo_weights, args.resnet_weights, use_resnet50=args.use_resnet50, species_names=species_names)
