@@ -41,7 +41,7 @@ source setup_env.sh
 
 To run a full detection example, you need to specify the raspberrypi camera as input, and the HEF model you want to run:
 ```bash
-python basic_pipelines/detection.py --input rpi --hef-path hailo_models/yolov8m.hef
+python basic_pipelines/detection.py --input rpi --hef-path resources/yolov8m.hef
 ```
 Make sure to have the HEF model available and the correct path. 
 
@@ -85,7 +85,7 @@ Then in the botton of the file, add the shell script you want to run when powere
 @reboot /home/bplusplus/Documents/sensing-garden/run_sensing_garden_tl.sh
 
 # running hailo detection - needs input and hef file path
-@reboot /home/bplusplus/Documents/sensing-garden/run_sensing_garden_hailo.sh --input rpi --hef-path /home/bplusplus/Documents/sensing-garden/hailo_models/yolov8m.hef
+@reboot /home/bplusplus/Documents/sensing-garden/run_sensing_garden_hailo.sh --input rpi --hef-path /home/bplusplus/Documents/sensing-garden/resources/yolov8m.hef
 
 ```
 

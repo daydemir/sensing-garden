@@ -55,7 +55,7 @@ pip install "git+https://github.com/hailo-ai/hailo-apps-infra.git@$TAG"
 #fi
 
 # Download resources needed for the pipelines
-#echo "Downloading resources needed for the pipelines..."
-#./download_resources.sh $DOWNLOAD_RESOURCES_FLAG
+echo "Downloading resources needed for the pipelines..."
+./download_resources.sh $DOWNLOAD_RESOURCES_FLAG
 
 echo "Installation completed successfully."

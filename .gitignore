@@ -1,5 +1,5 @@
 models
-hailo_models
+resources
 run_tests
 venv_hailo_rpi5
 hailort.log
