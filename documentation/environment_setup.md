@@ -15,7 +15,7 @@ The pipeline we run in the sensing garden project will be using [Hailo Apps Infr
 - opencv-python
 
 ```bash
-pip install git+https://github.com/hailo-ai/hailo-apps-infra.git
+sudo apt install hailo-all
 ```
 
 # Setting up the Hailo AI accellerator on the RaspberryPi5 
