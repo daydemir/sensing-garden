@@ -26,8 +26,12 @@ def main():
         os.makedirs("/home/bplusplus/Videos/sensing-garden")
 
     while True:
-        record_video()
-        time.sleep(540)  # Sleep for 9 minutes (540 seconds) 
+        current_hour = datetime.now().hour
+        if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
+            record_video()
+        else:
+            print("Outside active hours. Waiting...")
+        time.sleep(540)  # Sleep for 9 minutes (540 seconds)
 
 if __name__ == "__main__":
     main()
