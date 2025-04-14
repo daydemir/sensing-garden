@@ -4,3 +4,4 @@ run_tests
 venv_hailo_rpi5
 hailort.log
 log-files
+.env
