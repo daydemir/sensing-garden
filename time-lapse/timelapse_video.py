@@ -11,6 +11,8 @@ video_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "video
 os.makedirs(video_dir, exist_ok=True)
 
 def record_video():
+    print("Entering record_video", flush=True)
+    print("Recording video...", flush=True)
     picam2 = Picamera2()
     camera_config = picam2.create_video_configuration(
         main={"format": 'RGB888', "size": (1080, 1080)})
@@ -26,6 +28,8 @@ def record_video():
     time.sleep(60)  # Record for 1 minute (60 seconds)
     picam2.stop_recording()
     picam2.close()
+    print(f"Video saved to {filename}", flush=True)
+    print("Exiting record_video", flush=True)
 
 from typing import Optional
 
@@ -34,6 +38,7 @@ def upload_video(
     video_path: Optional[str] = None,
     metadata: Optional[dict] = None,
 ) -> None:
+    print("Entering upload_video", flush=True)
     """
     Uploads a video file to the Sensing Garden backend.
     Loads config from environment variables. If video_path is None, uploads the latest video in the default directory.
@@ -85,13 +90,18 @@ def upload_video(
         content_type="video/mp4",
         metadata=upload_metadata
     )
-    print("Upload response:", response)
+    print("Upload response:", response, flush=True)
+    print("Exiting upload_video", flush=True)
 
 
 def get_unuploaded_videos(directory: str):
-    return [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".mp4")]
+    print("Entering get_unuploaded_videos", flush=True)
+    result = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".mp4")]
+    print(f"Exiting get_unuploaded_videos with {len(result)} videos", flush=True)
+    return result
 
 def main():
+    print("Entering main", flush=True)
     while True:
         current_hour = datetime.now().hour
         # if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
@@ -104,11 +114,11 @@ def main():
                 # After successful upload, delete the video file
                 try:
                     os.remove(video_path)
-                    print(f"Deleted video: {video_path}")
+                    print(f"Deleted video: {video_path}", flush=True)
                 except Exception as del_exc:
-                    print(f"Failed to delete {video_path}: {del_exc}")
+                    print(f"Failed to delete {video_path}: {del_exc}", flush=True)
             except Exception as e:
-                print(f"Failed to upload {video_path}: {e}")
+                print(f"Failed to upload {video_path}: {e}", flush=True)
         # else:
         #     print("Outside active hours. Waiting...")
         # time.sleep(540)  # Sleep for 9 minutes (540 seconds)
