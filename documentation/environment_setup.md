@@ -82,10 +82,10 @@ Then in the botton of the file, add the shell script you want to run when powere
 
 ```bash
 # running time lapse video
-@reboot /home/bplusplus/Documents/sensing-garden/run_sensing_garden_tl.sh
+@reboot /path/to/your/project/run_sensing_garden_tl.sh
 
 # running hailo detection - needs input and hef file path
-@reboot /home/bplusplus/Documents/sensing-garden/run_sensing_garden_hailo.sh --input rpi --hef-path /home/bplusplus/Documents/sensing-garden/resources/yolov8m.hef
+@reboot /path/to/your/project/run_sensing_garden_hailo.sh --input rpi --hef-path /path/to/your/project/resources/yolov8m.hef
 
 ```
 

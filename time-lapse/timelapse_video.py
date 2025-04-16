@@ -16,7 +16,9 @@ def record_video():
     picam2.start()
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"/home/bplusplus/Videos/sensing-garden/video_{timestamp}.mp4"
+    video_dir = os.path.join(os.path.dirname(__file__), "..", "videos")
+    os.makedirs(video_dir, exist_ok=True)
+    filename = os.path.join(video_dir, f"video_{timestamp}.mp4")
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
 
     picam2.start_recording(encoder, filename)
@@ -50,7 +52,8 @@ def upload_video(
     
     # Determine video file to upload
     if video_path is None:
-        video_dir = "/home/bplusplus/Videos/sensing-garden"
+        video_dir = os.path.join(os.path.dirname(__file__), "..", "videos")
+        os.makedirs(video_dir, exist_ok=True)
         mp4_files = [
             os.path.join(video_dir, f)
             for f in os.listdir(video_dir)
