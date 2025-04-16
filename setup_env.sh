@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Export all variables from .env for Python and other processes
+if [ -f .env ]; then
+  set -a
+  source .env
+  set +a
+fi
+
 # TAPPAS CORE Definitions
 CORE_VENV_NAME="venv_hailo_rpi5"
 CORE_REQUIRED_VERSION=("3.30.0" "3.31.0" "3.32.0")
