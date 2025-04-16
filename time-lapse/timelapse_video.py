@@ -24,7 +24,7 @@ def record_video():
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
 
     picam2.start_recording(encoder, filename)
-    time.sleep(60)  # Record for 1 minute (60 seconds)
+    time.sleep(10)  # Record for 10 seconds
     picam2.stop_recording()
     picam2.close()
     print(f"Video saved to {filename}", flush=True)
