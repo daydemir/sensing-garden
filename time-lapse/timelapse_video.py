@@ -88,15 +88,10 @@ def upload_video(
     print("Upload response:", response)
 
 
+def get_unuploaded_videos(directory: str):
+    return [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".mp4")]
+
 def main():
-    video_dir = "/home/bplusplus/Videos/sensing-garden"
-    if not os.path.exists(video_dir):
-        os.makedirs(video_dir)
-
-    def get_unuploaded_videos(directory: str):
-        mp4s = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".mp4")]
-        return [f for f in mp4s if not os.path.exists(f + ".uploaded")]
-
     while True:
         current_hour = datetime.now().hour
         if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
@@ -106,9 +101,12 @@ def main():
             for video_path in sorted(unuploaded, key=os.path.getmtime):
                 try:
                     upload_video(video_path=video_path)
-                    # Mark as uploaded
-                    with open(video_path + ".uploaded", "w"):
-                        pass
+                    # After successful upload, delete the video file
+                    try:
+                        os.remove(video_path)
+                        print(f"Deleted video: {video_path}")
+                    except Exception as del_exc:
+                        print(f"Failed to delete {video_path}: {del_exc}")
                 except Exception as e:
                     print(f"Failed to upload {video_path}: {e}")
         else:
