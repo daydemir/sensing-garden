@@ -12,22 +12,32 @@ os.makedirs(video_dir, exist_ok=True)
 
 def record_video():
     print("Entering record_video", flush=True)
-    print("Recording video...", flush=True)
     picam2 = Picamera2()
+    print("Picamera2 instance created", flush=True)
     camera_config = picam2.create_video_configuration(
         main={"format": 'RGB888', "size": (1080, 1080)})
+    print("Video configuration created", flush=True)
     picam2.set_controls({"AfMode": 0, "LensPosition": 0.0})
+    print("Camera controls set", flush=True)
     picam2.configure(camera_config)
+    print("Camera configured", flush=True)
     picam2.start()
+    print("Camera started", flush=True)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = os.path.join(video_dir, f"video_{timestamp}.mp4")
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
+    print("Encoder created", flush=True)
 
     picam2.start_recording(encoder, filename)
+    print(f"Started recording to {filename}", flush=True)
+    print("Sleeping for 60 seconds while recording", flush=True)
     time.sleep(60)  # Record for 1 minute (60 seconds)
+    print("Woke up from sleep, stopping recording", flush=True)
     picam2.stop_recording()
+    print("Recording stopped", flush=True)
     picam2.close()
+    print("Camera closed", flush=True)
     print(f"Video saved to {filename}", flush=True)
     print("Exiting record_video", flush=True)
 
