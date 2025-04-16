@@ -6,6 +6,9 @@ import sensing_garden_client as sgc
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder
 
+# Define video_dir at the top level, relative to this script
+video_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "videos"))
+os.makedirs(video_dir, exist_ok=True)
 
 def record_video():
     picam2 = Picamera2()
@@ -16,8 +19,6 @@ def record_video():
     picam2.start()
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    video_dir = os.path.join(os.path.dirname(__file__), "..", "videos")
-    os.makedirs(video_dir, exist_ok=True)
     filename = os.path.join(video_dir, f"video_{timestamp}.mp4")
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
 
@@ -27,6 +28,7 @@ def record_video():
     picam2.close()
 
 from typing import Optional
+
 
 def upload_video(
     video_path: Optional[str] = None,
@@ -38,8 +40,9 @@ def upload_video(
     """
     import os
     from datetime import datetime
+
     from sensing_garden_client import SensingGardenClient
-    
+
     # Load config from environment variables
     api_key = os.environ.get("SENSING_GARDEN_API_KEY")
     base_url = os.environ.get("API_BASE_URL")
@@ -52,8 +55,6 @@ def upload_video(
     
     # Determine video file to upload
     if video_path is None:
-        video_dir = os.path.join(os.path.dirname(__file__), "..", "videos")
-        os.makedirs(video_dir, exist_ok=True)
         mp4_files = [
             os.path.join(video_dir, f)
             for f in os.listdir(video_dir)
