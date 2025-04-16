@@ -94,7 +94,7 @@ def get_unuploaded_videos(directory: str):
 def main():
     while True:
         current_hour = datetime.now().hour
-        if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
+        # if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
             record_video()
             # After recording, upload all un-uploaded videos
             unuploaded = get_unuploaded_videos(video_dir)
@@ -109,9 +109,9 @@ def main():
                         print(f"Failed to delete {video_path}: {del_exc}")
                 except Exception as e:
                     print(f"Failed to upload {video_path}: {e}")
-        else:
-            print("Outside active hours. Waiting...")
-        time.sleep(540)  # Sleep for 9 minutes (540 seconds)
+        # else:
+        #     print("Outside active hours. Waiting...")
+        # time.sleep(540)  # Sleep for 9 minutes (540 seconds)
 
 if __name__ == "__main__":
     main()
