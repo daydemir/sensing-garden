@@ -24,11 +24,40 @@ def record_video():
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
 
     picam2.start_recording(encoder, filename)
-    time.sleep(10)  # Record for 10 seconds
+    time.sleep(60)  # Record for 1 minute (60 seconds)
     picam2.stop_recording()
     picam2.close()
     print(f"Video saved to {filename}", flush=True)
     print("Exiting record_video", flush=True)
+    return filename
+
+
+# The MP4 file produced by Picamera2 is sometimes not formatted in a way that is recognizable by standard players (e.g., vlc, quicktime, browsers).
+# This function uses ffmpeg to re-mux the file in-place so it becomes broadly compatible.
+def remux_mp4_with_ffmpeg_inplace(path: str):
+    """
+    Use ffmpeg to remux the MP4 in-place for better compatibility.
+    Writes to a temporary file and moves it over the original.
+    """
+    import os
+    import subprocess
+    import tempfile
+    dir_name = os.path.dirname(path)
+    with tempfile.NamedTemporaryFile(suffix='.mp4', dir=dir_name, delete=False) as tmp:
+        tmp_path = tmp.name
+    print(f"Remuxing {path} in-place using ffmpeg", flush=True)
+    try:
+        subprocess.run([
+            "ffmpeg", "-y", "-i", path, "-c", "copy", tmp_path
+        ], check=True)
+        os.replace(tmp_path, path)
+        print(f"Remuxed successfully in-place: {path}", flush=True)
+    except Exception as e:
+        print(f"Remuxing failed: {e}", flush=True)
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+
 
 from typing import Optional
 
@@ -65,7 +94,7 @@ def upload_video(
     if missing:
         print(f"Missing required environment variables for video upload: {', '.join(missing)}", flush=True)
         raise RuntimeError("Missing one or more required environment variables for video upload.")
-    
+
     # Determine video file to upload
     if video_path is None:
         mp4_files = [
@@ -113,7 +142,8 @@ def main():
     while True:
         current_hour = datetime.now().hour
         # if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
-        record_video()
+        video_path = record_video()
+        remux_mp4_with_ffmpeg_inplace(video_path)
         # After recording, upload all un-uploaded videos
         unuploaded = get_unuploaded_videos(video_dir)
         for video_path in sorted(unuploaded, key=os.path.getmtime):
