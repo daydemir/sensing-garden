@@ -141,25 +141,25 @@ def main():
     print("Entering main", flush=True)
     while True:
         current_hour = datetime.now().hour
-        # if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
-        video_path = record_video()
-        remux_mp4_with_ffmpeg_inplace(video_path)
-        # After recording, upload all un-uploaded videos
-        unuploaded = get_unuploaded_videos(video_dir)
-        for video_path in sorted(unuploaded, key=os.path.getmtime):
-            try:
-                upload_video(video_path=video_path)
-                # After successful upload, delete the video file
+        if 6 <= current_hour < 22:  # Check if the current time is between 6:00 AM and 10:00 PM
+            video_path = record_video()
+            remux_mp4_with_ffmpeg_inplace(video_path)
+            # After recording, upload all un-uploaded videos
+            unuploaded = get_unuploaded_videos(video_dir)
+            for video_path in sorted(unuploaded, key=os.path.getmtime):
                 try:
-                    os.remove(video_path)
-                    print(f"Deleted video: {video_path}", flush=True)
-                except Exception as del_exc:
-                    print(f"Failed to delete {video_path}: {del_exc}", flush=True)
-            except Exception as e:
-                print(f"Failed to upload {video_path}: {e}", flush=True)
-        # else:
-        #     print("Outside active hours. Waiting...")
-        # time.sleep(540)  # Sleep for 9 minutes (540 seconds)
+                    upload_video(video_path=video_path)
+                    # After successful upload, delete the video file
+                    try:
+                        os.remove(video_path)
+                        print(f"Deleted video: {video_path}", flush=True)
+                    except Exception as del_exc:
+                        print(f"Failed to delete {video_path}: {del_exc}", flush=True)
+                except Exception as e:
+                    print(f"Failed to upload {video_path}: {e}", flush=True)
+        else:
+            print("Outside active hours. Waiting...")
+        time.sleep(540)  # Sleep for 9 minutes (540 seconds)
 
 if __name__ == "__main__":
     main()
