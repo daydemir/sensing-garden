@@ -31,8 +31,8 @@ def record_video():
 
     picam2.start_recording(encoder, filename)
     print(f"Started recording to {filename}", flush=True)
-    print("Sleeping for 60 seconds while recording", flush=True)
-    time.sleep(60)  # Record for 1 minute (60 seconds)
+    print("Sleeping for 5 seconds while recording", flush=True)
+    time.sleep(5)  # Record for 5 seconds
     print("Woke up from sleep, stopping recording", flush=True)
     picam2.stop_recording()
     print("Recording stopped", flush=True)
