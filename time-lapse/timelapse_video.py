@@ -13,31 +13,20 @@ os.makedirs(video_dir, exist_ok=True)
 def record_video():
     print("Entering record_video", flush=True)
     picam2 = Picamera2()
-    print("Picamera2 instance created", flush=True)
     camera_config = picam2.create_video_configuration(
         main={"format": 'RGB888', "size": (1080, 1080)})
-    print("Video configuration created", flush=True)
     picam2.set_controls({"AfMode": 0, "LensPosition": 0.0})
-    print("Camera controls set", flush=True)
     picam2.configure(camera_config)
-    print("Camera configured", flush=True)
     picam2.start()
-    print("Camera started", flush=True)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = os.path.join(video_dir, f"video_{timestamp}.mp4")
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
-    print("Encoder created", flush=True)
 
     picam2.start_recording(encoder, filename)
-    print(f"Started recording to {filename}", flush=True)
-    print("Sleeping for 5 seconds while recording", flush=True)
-    time.sleep(5)  # Record for 5 seconds
-    print("Woke up from sleep, stopping recording", flush=True)
+    time.sleep(60)  # Record for 1 minute (60 seconds)
     picam2.stop_recording()
-    print("Recording stopped", flush=True)
     picam2.close()
-    print("Camera closed", flush=True)
     print(f"Video saved to {filename}", flush=True)
     print("Exiting record_video", flush=True)
 
@@ -65,7 +54,16 @@ def upload_video(
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
     device_id = os.environ.get("DEVICE_ID")
 
-    if not all([api_key, base_url, aws_access_key_id, aws_secret_access_key, device_id]):
+    required_vars = {
+        'SENSING_GARDEN_API_KEY': api_key,
+        'API_BASE_URL': base_url,
+        'AWS_ACCESS_KEY_ID': aws_access_key_id,
+        'AWS_SECRET_ACCESS_KEY': aws_secret_access_key,
+        'DEVICE_ID': device_id,
+    }
+    missing = [k for k, v in required_vars.items() if not v]
+    if missing:
+        print(f"Missing required environment variables for video upload: {', '.join(missing)}", flush=True)
         raise RuntimeError("Missing one or more required environment variables for video upload.")
     
     # Determine video file to upload
