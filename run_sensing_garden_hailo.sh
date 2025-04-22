@@ -23,13 +23,13 @@ if [ -z "$INPUT" ] || [ -z "$HEF_PATH" ]; then
 fi
 
 # Path to the Python script you want to run
-HAILO_PYTHON_SCRIPT="/home/bplusplus/Documents/sensing-garden/basic_pipelines/detection.py"
+HAILO_PYTHON_SCRIPT="./basic_pipelines/detection.py"
 
 # Log file for output and errors
-HAILO_LOG_FILE="/home/bplusplus/Documents/sensing-garden/log-files/hailort.log"
+HAILO_LOG_FILE="./log-files/hailort.log"
 
 # Source the environment
-source "/home/bplusplus/Documents/sensing-garden/setup_env.sh"
+source "./setup_env.sh"
 
 # Run the Python script with parsed arguments and log output/errors
 python3 "$HAILO_PYTHON_SCRIPT" --input "$INPUT" --hef-path "$HEF_PATH" >> "$HAILO_LOG_FILE" 2>&1
