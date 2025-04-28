@@ -15,7 +15,7 @@ def record_video():
     picam2 = Picamera2()
     camera_config = picam2.create_video_configuration(
         main={"format": 'RGB888', "size": (1080, 1080)})
-    picam2.set_controls({"AfMode": 0, "LensPosition": 0.0})
+    picam2.set_controls({"AfMode": 0, "LensPosition": 0.5})
     picam2.configure(camera_config)
     picam2.start()
 
