@@ -15,7 +15,7 @@ cpu_temp_c=$((cpu_temp / 1000))
 # Only run script if temperature is below 80 degrees Celsius to prevent overheating
 if [ "$cpu_temp_c" -lt 80 ]; then
     # Source the environment
-    /source "./setup_env.sh"
+    source "./setup_env.sh"
 
     # Run the Python script with parsed arguments and log output/errors
     python3 "$TL_PYTHON_SCRIPT" >> "$TIME_LAPSE_LOG_FILE" 2>&1
