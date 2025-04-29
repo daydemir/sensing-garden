@@ -159,7 +159,8 @@ def main():
                     print(f"Failed to upload {video_path}: {e}", flush=True)
         else:
             print("Outside active hours. Waiting...")
-        time.sleep(540)  # Sleep for 9 minutes (540 seconds)
+        #time.sleep(540)  # Sleep for 9 minutes (540 seconds)
+        time.sleep(60) # sleep for 1 minute - just for data collection purposes in London
 
 if __name__ == "__main__":
     main()
