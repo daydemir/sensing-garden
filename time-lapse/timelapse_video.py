@@ -19,8 +19,7 @@ def record_video():
     picam2.configure(camera_config)
     picam2.start()
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join(video_dir, f"video_{timestamp}.mp4")
+    filename = create_filename()
     encoder = H264Encoder(bitrate=10000000)  # 10 Mbps
 
     picam2.start_recording(encoder, filename)
@@ -30,6 +29,16 @@ def record_video():
     print(f"Video saved to {filename}", flush=True)
     print("Exiting record_video", flush=True)
     return filename
+
+
+# function that creates video filename with timestamp
+def create_filename() -> str:
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return os.path.join(video_dir, f"video_{timestamp}.mp4")
+
+# function that extracts timestamp from video filename
+def extract_timestamp(filename: str) -> str:
+    return filename.split("_")[1].split(".")[0]
 
 
 # The MP4 file produced by Picamera2 is sometimes not formatted in a way that is recognizable by standard players (e.g., vlc, quicktime, browsers).
@@ -118,7 +127,11 @@ def upload_video(
         aws_secret_access_key=aws_secret_access_key
     )
 
-    timestamp = datetime.now().isoformat()
+    # use the timestamp embedded in the filename (this is a bad hack for now)
+    # get the file name from the video_path
+    filename = os.path.basename(video_path)
+    timestamp = extract_timestamp(filename)
+
     upload_metadata = metadata or {}
     response = sgc.videos.upload_video(
         device_id=device_id,
