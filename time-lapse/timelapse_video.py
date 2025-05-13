@@ -124,13 +124,15 @@ def upload_video(
     )
 
     # get create timestamp of video_data
+    import datetime
     create_timestamp = os.path.getctime(video_path)
-    print(f"Create timestamp: {create_timestamp}", flush=True)
+    create_timestamp_iso = datetime.datetime.fromtimestamp(create_timestamp).isoformat()
+    print(f"Create timestamp: {create_timestamp_iso}", flush=True)
 
     upload_metadata = metadata or {}
     response = sgc.videos.upload_video(
         device_id=device_id,
-        timestamp=create_timestamp,
+        timestamp=create_timestamp_iso,
         video_path_or_data=video_data,
         content_type="video/mp4",
         metadata=upload_metadata
