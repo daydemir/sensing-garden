@@ -36,10 +36,6 @@ def create_filename() -> str:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     return os.path.join(video_dir, f"video_{timestamp}.mp4")
 
-# function that extracts timestamp from video filename
-def extract_timestamp(filename: str) -> str:
-    return filename.split("_")[1].split(".")[0]
-
 
 # The MP4 file produced by Picamera2 is sometimes not formatted in a way that is recognizable by standard players (e.g., vlc, quicktime, browsers).
 # This function uses ffmpeg to re-mux the file in-place so it becomes broadly compatible.
@@ -127,17 +123,14 @@ def upload_video(
         aws_secret_access_key=aws_secret_access_key
     )
 
-    # use the timestamp embedded in the filename (this is a bad hack for now)
-    # get the file name from the video_path
-    filename = os.path.basename(video_path)
-    print(f"Filename: {filename}", flush=True)
-    timestamp = extract_timestamp(filename)
-    print(f"Timestamp: {timestamp}", flush=True)
+    # get create timestamp of video_data
+    create_timestamp = os.path.getctime(video_path)
+    print(f"Create timestamp: {create_timestamp}", flush=True)
 
     upload_metadata = metadata or {}
     response = sgc.videos.upload_video(
         device_id=device_id,
-        timestamp=timestamp,
+        timestamp=create_timestamp,
         video_path_or_data=video_data,
         content_type="video/mp4",
         metadata=upload_metadata
