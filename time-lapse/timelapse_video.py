@@ -130,7 +130,9 @@ def upload_video(
     # use the timestamp embedded in the filename (this is a bad hack for now)
     # get the file name from the video_path
     filename = os.path.basename(video_path)
+    print(f"Filename: {filename}", flush=True)
     timestamp = extract_timestamp(filename)
+    print(f"Timestamp: {timestamp}", flush=True)
 
     upload_metadata = metadata or {}
     response = sgc.videos.upload_video(
